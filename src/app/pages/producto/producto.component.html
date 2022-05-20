@@ -1,0 +1,60 @@
+<!-- INFO PRODUCT -->
+<div class="card w-100">
+    <div class="card-body">
+
+        <div *ngIf="product">
+
+            <div class="d-flex flex-row flex-wrap gap-2 mb-3">
+
+                <div class="col-md-4">
+                    <img [src]="product.img | imagen: 'products' " alt="image" class="img-responsive img-rounded" width="150">
+                </div>
+
+                <div class="d-flex flex-column">
+                    <p class="mb-2 fw-bolder text-info">PRODUCTO:</p>
+                    <h3 class="mb-2 fw-bold fs-2">Codigo: {{ product.code }} </h3>
+                    <p class="mb-2 text-muted">Frecuencia de mantenimiento: {{ product.frecuencia }} meses </p>
+
+                    <button *ngIf="product.client?.name" class="text-truncate btn btn-block btn-outline-success btn-sm btn-rounded text-break mb-2" (click)="product = product" type="button" data-toggle="modal" data-target="#client-product" style="max-width: 12rem;">
+                        <span data-toggle="tooltip" [title]="product.client.name">
+                            {{ product.client?.name }}
+                        </span>
+                    </button>
+
+                    <button *ngIf="!product.client?.name && product.estado != 'Instalada'" (click)="product = product" type="button" class="btn btn-sm btn-icon btn-pure btn-info delete-row-btn text-break mb-2" data-toggle="modal" data-target="#client-product">
+                        <i class="mdi mdi-account-plus" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary" data-toggle="modal" data-target="#new-preventivo">Crear Preventivo</button>
+                    <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-danger mt-2" data-toggle="modal" data-target="#new-correctivo">Crear Correctivo</button>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3 col-xs-6 b-r"> <strong class="fw-bold">Serial</strong>
+                    <br>
+                    <p class="text-muted">{{ product.serial }}</p>
+                </div>
+
+                <div class="col-md-3 col-xs-6 b-r"> <strong class="fw-bold">Marca</strong>
+                    <br>
+                    <p class="text-muted"> {{ product.brand }} </p>
+                </div>
+
+                <div class="col-md-3 col-xs-6 b-r"> <strong class="fw-bold">Modelo</strong>
+                    <br>
+                    <p class="text-muted"> {{ product.model }} </p>
+                </div>
+
+                <div class="col-md-3 col-xs-6"> <strong class="fw-bold">Año</strong>
+                    <br>
+                    <p class="text-muted"> {{ product.year }} </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- INFO PRODUCT -->
