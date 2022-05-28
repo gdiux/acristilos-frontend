@@ -22,6 +22,9 @@ import { PipesModule } from '../pipes/pipes.module';
 import { ProductoComponent } from './producto/producto.component';
 import { CardsComponent } from './dashboard/components/cards/cards.component';
 import { TareasComponent } from './tareas/tareas.component';
+import { MachineComponent } from './machine/machine.component';
+import { MachinesComponent } from './machines/machines.component';
+import { TareaComponent } from './tarea/tarea.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { TareasComponent } from './tareas/tareas.component';
     PerfilComponent,
     ProductoComponent,
     CardsComponent,
-    TareasComponent
+    TareasComponent,
+    MachineComponent,
+    MachinesComponent,
+    TareaComponent
   ],
   exports:[
     DashboardComponent,

@@ -29,7 +29,6 @@ export class ProductosComponent implements OnInit {
   }
 
   
-
   /** ======================================================================
    * ASSIGN CLIENTS
   ====================================================================== */
@@ -52,7 +51,7 @@ export class ProductosComponent implements OnInit {
   loadProducts(){
 
     this.cargando = true;
-    this.sinResultados = false;           
+    this.sinResultados = false;       
 
     this.productsService.loadProducts(this.desde, this.limite)
         .subscribe( ({products, total}) => {  

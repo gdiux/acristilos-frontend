@@ -7,12 +7,12 @@
                 <div class="d-flex justify-content-between flex-wrap mt-1">
 
                     <div>
-                        <h4 class="card-title">Lista de Tareas</h4>
+                        <h4 class="card-title">Lista de Maquinas - Cortadoras ó Estaciones</h4>
                         <h6 class="card-subtitle">Total: {{ total | number }}</h6>
 
                     </div>
                     <div>
-                        <button type="button" class="btn btn-info btn-rounded" data-toggle="modal" data-target="#add-task">Crear Tarea</button>
+                        <button type="button" class="btn btn-info btn-rounded" data-toggle="modal" data-target="#add-machine">Agregar Maquina</button>
                     </div>
 
                 </div>
@@ -20,7 +20,7 @@
 
                 <div class="d-flex justify-content-between flex-wrap mt-1">
                     <div class="my-2">
-                        <input type="text" id="demo-input-search2" placeholder="Buscar Tareas" (keyup)="search(buscador.value)" class="form-control m-0" #buscador>
+                        <input type="text" id="demo-input-search2" placeholder="Buscar Maquinas" (keyup)="search(buscador.value)" class="form-control m-0" #buscador>
                         <small *ngIf="resultados > 0" class="text-muted animated fadeIn">Resultados: {{resultados}}</small>
                     </div>
 
@@ -42,39 +42,31 @@
                     <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-page-size="10">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Cliente</th>
+                                <th>Nombre</th>
+                                <th>Serial</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr *ngIf="tasks.length == 0">
+                            <tr *ngIf="machines.length == 0">
                                 <td colspan="8">
-                                    <h3 class="mb-0 text-center"> Aun no existen registros de tareas... </h3>
+                                    <h3 class="mb-0 text-center"> Aun no existen registros de maquinas... </h3>
                                 </td>
                             </tr>
 
-                            <tr *ngFor="let tarea of tasks">
+                            <tr *ngFor="let machine of machines">
 
 
+                                <td> {{ machine.name }} </td>
+                                <td> {{ machine.serial }} </td>
                                 <td>
-                                    <a [routerLink]="['/dashboard/tarea', tarea.tid]">
-
-                                        {{ tarea.control }} 
-                                    </a>
+                                    <span *ngIf="machine.status" class="label label-success"> Activo </span>
+                                    <span *ngIf="!machine.status" class="label label-danger"> Desactivado </span>
                                 </td>
                                 <td>
-                                    {{ tarea.client.name }}
-                                    <span class="label " [ngClass]="{'label-success': tarea.estado === 'Finalizada', 'label-warning': tarea.estado === 'Pendiente'}"> {{ tarea.estado  }} </span>
-                                </td>
-                                <td>
-                                    <span *ngIf="tarea.status" class="label label-success"> Activo </span>
-                                    <span *ngIf="!tarea.status" class="label label-danger"> Desactivado </span>
-                                </td>
-                                <td>
-                                    <button (click)="selectMachine(tarea)" type="button" class="btn btn-sm btn-icon btn-pure btn-outline text-primary delete-row-btn" data-toggle="modal" data-target="#edit-machine">
+                                    <button (click)="selectMachine(machine)" type="button" class="btn btn-sm btn-icon btn-pure btn-outline text-primary delete-row-btn" data-toggle="modal" data-target="#edit-machine">
                                         <i class="ti-pencil" aria-hidden="true"></i>
                                     </button>
                                     <button type="button" class="btn btn-sm btn-icon btn-pure btn-outline delete-row-btn" data-toggle="tooltip" data-original-title="Desactivar">
@@ -105,91 +97,19 @@
 </div>
 
 <!-- ========================================================= 
-MODAL CREAR TASK
+MODAL AGREGAR MACHINE
 ======================================================== -->
-<div id="add-task" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="add-machine" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" #modalNewUser>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">Nueva tarea</h4>
+                <h4 class="modal-title" id="myModalLabel">Nuevo machineo</h4>
             </div>
             <div class="modal-body">
 
-                <!-- SELECCIONAR CLIENTE -->
-                <div class="pl-0 mb-3 d-flex align-items-center flex-wrap shadow-sm bg-dark text-white">
-                    <div class="py-2 px-4 bg-info text-white">1</div>
-                    <p class="mb-0 pl-2">Crea una nota o descripción</p>
-                </div>
 
-                <!-- DESCIPCION DEL CORRECTIVO -->
-                <div class="form-group">
-                    <label>Descripción de la tarea</label>
-                    <textarea class="form-control" rows="3" #description placeholder="Escribe la descripción..."></textarea>
-                </div>
-
-                <!-- SELECCIONAR CLIENTE -->
-                <div class="pl-0 mb-3 d-flex align-items-center flex-wrap shadow-sm bg-dark text-white">
-                    <div class="py-2 px-4 bg-info text-white">2</div>
-                    <p class="mb-0 pl-2">Seleccionar un cliente</p>
-                </div>
-
-                <div>
-                    <input type="text" autocomplete="off" id="demo-input-search3" placeholder="Buscar Cliente" (keyup)="searchClients(buscadorC.value)" class="form-control m-0" #buscadorC>
-                    <small *ngIf="resClient > 0" class="text-muted animated fadeIn">Resultados: {{resClient}}</small>
-                    <small *ngIf="sinResultadoC" class="text-muted animated fadeIn">Sin resultados...</small>
-
-
-                    <div *ngIf="clients.length > 0" class="list-group list-group-flush shadow" style="min-width: 80%; max-height:400px; overflow-y: scroll; z-index: 500; position: fixed; ">
-
-                        <ng-container *ngFor="let client of clients ">
-                            <button type="button " class="list-group-item list-group-item-action pointer animated fadeIn fast" (click)="selectClient(client) " data-dismiss="modal ">
-                                    <div class="d-flex w-100 justify-content-between ">
-                                        <div>
-                                            <h5 class="mb-1 text-break fw-bolder ">{{ client.name }}</h5>
-                                            <small class="mb-1 text-break fw-bolder text-muted">CC/Nit: {{ client.cedula }}</small>
-                                        </div>
-                                        <small> 
-                                            <span *ngIf="client.status " class="label label-success "> Activo </span>
-                                            <span *ngIf="!client.status " class="label label-danger "> Desactivado </span>
-                                        </small>
-                                    </div>
-                                    <p class="mb-1 " *ngIf="client?.address" > <i class="mdi mdi-maps"></i> {{ client?.address }} </p>
-                                    
-                                </button>
-                        </ng-container>
-
-                    </div>
-
-                    <!-- CLIENT SELECT -->
-                    <div *ngIf="clientSelect" class="card card-outline-info mt-2 shadow">
-                        <div class="card-header">
-                            <h4 class="m-b-0 text-white">Nombre: {{ clientSelect!.name }} </h4>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">
-                                <i class="mdi mdi-account-card-details"></i>
-                                <span class="font-weight-bold"> CC/Nit:</span> {{ clientSelect!.cedula }}
-                            </h3>
-
-                            <ul class="list-group list-group-flush">
-
-                                <li *ngIf="clientSelect!.phone" class="list-group-item">
-                                    <span class="font-weight-bold">Telefono:</span> {{ clientSelect!.phone }}
-                                </li>
-                                <li *ngIf="clientSelect!.address" class="list-group-item">
-                                    <span class="font-weight-bold">Dirección:</span> {{ clientSelect!.address }}
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- CLIENT SELECT -->
-                </div>
-                <!-- SELECCIONAR CLIENTS -->
-
-
-                <!-- <form class="form-horizontal form-material" autocomplete="off" [formGroup]="newTaskForm" (ngSubmit)="createTask()">
+                <form class="form-horizontal form-material" autocomplete="off" [formGroup]="newMachineForm" (ngSubmit)="createMachine()">
 
                     <div class="form-group has-danger">
 
@@ -212,11 +132,10 @@ MODAL CREAR TASK
                     </div>
 
                     <button type="submit" [disabled]="savingNew" class="btn btn-info waves-effect btn-block">Guardar</button>
-                </form> -->
+                </form>
 
             </div>
             <div class="modal-footer">
-                <button *ngIf="selectCliente" (click)="createTask()" type="button " class="btn btn-info waves-effect " data-dismiss="modal ">Crear tarea</button>
                 <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -226,7 +145,7 @@ MODAL CREAR TASK
 <!-- ========================================================= 
 MODAL EDITAR MACHINE
 ======================================================== -->
-<!-- <div id="edit-machine" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" #modalNewUser>
+<div id="edit-machine" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" #modalNewUser>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -267,4 +186,4 @@ MODAL EDITAR MACHINE
             </div>
         </div>
     </div>
-</div> -->
+</div>
