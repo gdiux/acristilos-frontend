@@ -51,6 +51,13 @@ export class StepsService {
   }
 
   /** ================================================================
+   *   CREATE NOTES STEPS
+  ==================================================================== */
+  postNotesStep( formData: any, id: string ){
+    return this.http.post<{ok: boolean, step: Step}>(`${base_url}/steps/notes/${id}`, formData, this.headers);
+  }
+
+  /** ================================================================
    *   PUT STEPS
   ==================================================================== */
   putStep( formData: any, id: string ){

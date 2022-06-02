@@ -1,1 +1,529 @@
-<p>tarea works!</p>
+<!-- BTN TERMINAR -->
+<div class="d-flex align-item-center flex-wrap gap-2 mb-3 w-md-50">
+
+    <button (click)="terminar()" type="button " class="card mt-2 mb-0 bg-danger p-3 text-white pointer ml-auto">
+        <div class="">
+            <h4 class="mb-0 text-white fw-bold text-left "> 
+                <i class="mdi mdi-checkbox-marked-outline"></i>
+                Terminar Tarea 
+            </h4>
+        </div>
+    </button>
+
+</div>
+<!-- BTN TERMINAR -->
+<hr>
+<!-- CONTROL - CLIENT -->
+<div class="d-flex align-item-center flex-wrap gap-2 mb-3">
+
+    <!-- CONTROL -->
+    <div class="d-flex flex-row bg-white pl-0 pr-3 shadow-sm mt-2">
+        <div class="p-10 bg-info">
+            <h3 class="text-white box m-b-0 fs-3 fw-bold">
+                {{ task?.control | number }}
+            </h3>
+        </div>
+        <div class="align-self-center m-l-20">
+            <h3 class="m-b-0 text-info"> Control </h3>
+            <small *ngIf="task?.estado === 'Pendiente' " class="text-warning m-b-0">
+                {{ task?.estado }}
+            </small>
+            <small *ngIf="task?.estado === 'Terminado' " class="text-success m-b-0">
+                {{ task?.estado }}
+            </small>
+        </div>
+    </div>
+
+    <!-- CLIENT -->
+    <div class="d-flex flex-row bg-white pl-0 shadow-sm mt-2">
+        <div class="p-10 bg-primary">
+            <h3 class="text-white box m-b-0">
+                <i class=" mdi mdi-account-outline fs-2"></i>
+            </h3>
+        </div>
+        <div class="align-self-center m-l-20 pr-3">
+            <h4 class="m-b-0 text-primary text-break"> {{task?.client.name}} </h4>
+            <small class="text-muted m-b-0">
+                <i class="mdi mdi-account-card-details"></i>
+                {{ task?.client.cedula }}
+            </small>
+            <small class="text-muted m-b-0" *ngIf="task?.client.address">
+                - <i class="mdi mdi-map-marker"></i>
+                {{ task?.client.address }}
+            </small>
+
+        </div>
+    </div>
+
+</div>
+<!-- CONTROL - CLIENT -->
+
+<div *ngIf="task">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="container pt-4 d-flex">
+                    <h3 class="mb-0 text-primary fw-bold">- Timeline de la tarea</h3>
+                    <button type="button" class="btn btn-outline-primary ml-auto" data-toggle="modal" data-target="#add-step">nuevo step</button>
+                </div>
+
+                <div class="card-body">
+                    <section class="cd-horizontal-timeline my-4">
+                        <div class="timeline">
+                            <div class="events-wrapper">
+                                <div class="events" [ngStyle]="{'width': (steps.length+2)*120+'px', 'min-width': '100vw'}">
+                                    <ol>
+
+                                        <li>
+                                            <a href="#0" [attr.data-date]="task.fecha | date:'medium'" class="selected" style="left: 100px">
+                                                <i class="mdi mdi-check"></i> {{ task.fecha | date:'d/M/y'}}
+                                            </a>
+                                        </li>
+
+
+                                        <li *ngFor="let step of steps; let i = index">
+                                            <a href="#0" [attr.data-date]="step.fecha | date: 'medium'" [ngStyle]="{'left': (i+2)*140+'px' }">
+                                                <i class="mdi mdi-check" *ngIf="step.estado === 'Terminado'"></i> {{ step.fecha | date:'d/M/y'}}
+                                            </a>
+                                        </li>
+
+                                    </ol>
+                                    <span class="filling-line" aria-hidden="true"></span>
+                                </div>
+                                <!-- .events -->
+                            </div>
+                            <!-- .events-wrapper -->
+                            <ul class="cd-timeline-navigation">
+                                <li>
+                                    <a href="#0" class="prev" [ngClass]="{'inactive': steps.length === 0}">Prev</a>
+                                </li>
+                                <li>
+                                    <a href="#0" class="next">Next</a>
+                                </li>
+                            </ul>
+                            <!-- .cd-timeline-navigation -->
+                        </div>
+
+                        <!-- .timeline -->
+                        <div class="events-content">
+                            <ol>
+
+                                <li class="selected" [attr.data-date]="task.fecha | date:'medium'">
+                                    <h2>
+                                        <img class="img-circle pull-left m-r-20 m-b-10" width="60" alt="user" [src]="task.create.img | imagen:'user'" alt="user">{{ task.create.name }} <br/><small class="fs-6 lh-1">Inicio: {{ task.fecha | date:'medium' }} </small></h2>
+                                    <p class="m-t-40">
+                                        <span class="fw-bold fs-4">Descripción: </span>
+                                    </p>
+                                    <p>
+                                        {{ task?.description }}
+                                    </p>
+                                </li>
+
+                                <ng-container *ngFor="let step of steps; let i = index">
+
+                                    <li [attr.data-date]="step.fecha | date:'medium'">
+                                        <h2><img class="img-circle pull-left m-r-20 m-b-10" width="60" alt="user" [src]="step.staff.img | imagen:'user' " alt="user"> {{ step.staff.name }} <br/><small> {{ step.fecha | date:'medium'}} </small></h2>
+                                        <p class="m-t-40">
+                                            <span class="fw-bold fs-4">Descripción: </span>
+                                        </p>
+                                        <p>
+                                            {{ step.description }}
+                                        </p>
+
+                                        <div class="row">
+
+                                            <!-- NOTAS -->
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="card shadow-sm">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title"><span class="lstick"></span>Notas</h4>
+                                                    </div>
+                                                    <!-- ============================================================== -->
+                                                    <!-- Comment widgets -->
+                                                    <!-- ============================================================== -->
+                                                    <div class="comment-widgets">
+                                                        <!-- Comment Row -->
+                                                        <div class="d-flex flex-row comment-row" *ngFor="let nota of step?.notes; let i = index">
+                                                            <div class="p-2">
+                                                                <span class="round">
+                                                                    <img [src]="nota.staff.img | imagen: 'user'" alt="user" width="50">
+                                                                </span>
+                                                            </div>
+                                                            <div class="comment-text w-100">
+                                                                <h5 class="fw-bold"> {{ nota.staff.name }} </h5>
+                                                                <p class="m-b-5 text-break">
+                                                                    {{ nota.note }}
+                                                                </p>
+                                                                <div class="comment-footer">
+                                                                    <span class="text-muted pull-right"> {{ nota.date | date:'EEEE d MMMM  y h:mm a' }} </span>
+                                                                    <span class="action-icons active" *ngIf="i > 0">
+                                                                        <a href="javascript:void(0)"><i class="icon-close"></i></a> 
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- ENVIAR COMENTARIO -->
+                                                    <form autocomplete="off" [formGroup]="formNotes" (ngSubmit)="postNota(step, i)">
+                                                        <div class="card-body b-t">
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    <textarea formControlName="note" placeholder="Escribe una nota" (keyup.enter)="postNota(step, i)" class="form-control b-0" #notaI></textarea>
+                                                                    <div *ngIf="validate('note')" class="form-control-feedback animated fadeIn text-danger">
+                                                                        <small>** Campo de mensaje vacio </small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4 text-right">
+                                                                    <button type="submit" class="btn btn-info btn-circle btn-lg"><i class="fa fa-paper-plane-o"></i> </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    <!-- ENVIAR COMENTARIO -->
+                                                </div>
+
+                                            </div>
+                                            <!-- NOTAS -->
+
+                                            <!-- ARCHIVOS -->
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="card shadow-sm">
+                                                    <div class="card-body">
+                                                        <div class="d-flex">
+                                                            <h4 class="card-title"><span class="lstick bg-success"></span>Archivos</h4>
+                                                            <!-- <span class="badge badge-success">9</span> -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="activity-box">
+                                                        <div class="card-body">
+                                                            <!-- Activity item-->
+                                                            <div class="activity-item" *ngFor="let attachment of step.attachments">
+                                                                <div class="round m-r-20">
+                                                                    <img [src]="attachment.user.img | imagen: 'user'" alt="user" width="50">
+                                                                </div>
+                                                                <div class="m-t-10">
+                                                                    <h5 class="m-b-0 font-medium"> {{ attachment.user.name }}
+                                                                        <span class="text-muted font-14 m-l-10">| &nbsp; {{ attachment.date | date:' MMM d - yy hh:mm a'}} </span>
+                                                                    </h5>
+                                                                    <h6 class="text-muted">Agrego </h6>
+                                                                    <table class="table vm b-0 m-b-0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td class="m-r-10 b-0">
+                                                                                    <img *ngIf="attachment.type === 'img'" [src]=" attachment.attachment | imagen:'archivos' " alt="user" style="max-width: 200px;">
+                                                                                    <img *ngIf="attachment.type === 'archivo'" src="../../../assets/images/icon/file.png" alt="user">
+                                                                                    <h5 class="m-b-0 font-medium mt-2">
+
+                                                                                        <a [href]="url+'/uploads/archivos/'+attachment.attachment" download target="_blank">
+                                                                                            {{ attachment.attachment }} 
+                                                                                        </a>
+
+                                                                                    </h5>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Activity item-->
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="dropify-wrapper">
+                                                        <div class="dropify-message"><span class="file-icon"></span>
+                                                            <p> Arrastre y suelte o de click aqui </p>
+                                                            <p class="dropify-error">Ooops, something wrong appended.</p>
+                                                        </div>
+                                                        <div class="dropify-loader"></div>
+                                                        <div class="dropify-errors-container">
+                                                            <ul></ul>
+                                                        </div>
+                                                        <input #fileImg type="file" id="input-file-now" class="dropify" (change)="cambiarImage($event.target)">
+                                                        <button type="button" class="dropify-clear">Remove</button>
+                                                        <div class="dropify-preview" [ngClass]="{'d-block': imgTemp}">
+
+                                                            <span class="dropify-render">
+                                                                <img *ngIf="imgTemp" [src]="imgTemp" alt="">
+                                                            </span>
+
+                                                            <div class="dropify-infos">
+                                                                <div class="dropify-infos-inner">
+                                                                    <p class="dropify-filename">
+                                                                        <span class="file-icon"></span>
+                                                                        <span class="dropify-filename-inner"></span></p>
+                                                                    <p class="dropify-infos-message">Arrastre y suelte ó Seleccione una Imagen</p>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button (click)="subirImg(step, i)" type="button" class="mt-3 btn waves-effect waves-light btn-rounded btn-info">Subir imagens</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </li>
+                                </ng-container>
+
+
+                            </ol>
+                        </div>
+                        <!-- .events-content -->
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= 
+MODAL CREAR STEPS
+======================================================== -->
+<div id="add-step" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModal-add-step" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModal-add-step">Nuevo Paso</h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- DESCRIPCION -->
+                <div class="pl-0 mb-3 d-flex align-items-center flex-wrap shadow-sm bg-dark text-white">
+                    <div class="py-2 px-4 bg-info text-white">1</div>
+                    <p class="mb-0 pl-2">Crea una nota o descripción</p>
+                </div>
+
+                <!-- DESCIPCION DEL PASO -->
+                <div class="form-group">
+                    <label>Descripción del nuevo paso</label>
+                    <textarea class="form-control" rows="3" #descriptionStepp placeholder="Escribe la descripción..."></textarea>
+                </div>
+
+                <!-- SELECCIONAR STAFF -->
+                <div class="pl-0 mb-3 d-flex align-items-center flex-wrap shadow-sm bg-dark text-white">
+                    <div class="py-2 px-4 bg-info text-white">2</div>
+                    <p class="mb-0 pl-2">Seleccionar un staff</p>
+                </div>
+
+                <div>
+                    <input type="text" autocomplete="off" id="demo-input-search3" placeholder="Buscar Staff" (keyup)="searchStaffs(buscadorS.value)" class="form-control m-0" #buscadorS>
+                    <small *ngIf="resStaff > 0" class="text-muted animated fadeIn">Resultados: {{resStaff}}</small>
+                    <small *ngIf="sinResultadoS" class="text-muted animated fadeIn">Sin resultados...</small>
+
+
+                    <div *ngIf="staffs.length > 0" class="list-group list-group-flush shadow" style="min-width: 80%; max-height:400px; overflow-y: scroll; z-index: 500; position: fixed; ">
+
+                        <ng-container *ngFor="let staff of staffs ">
+                            <button type="button " class="list-group-item list-group-item-action pointer animated fadeIn fast" (click)="selectStaffs(staff) " data-dismiss="modal ">
+                                    <div class="d-flex w-100 justify-content-between ">
+                                        <div>
+                                            <h5 class="mb-1 text-break fw-bolder ">{{ staff.name }}</h5>
+                                        </div>
+                                        <small> 
+                                            <span *ngIf="staff.status " class="label label-success "> Activo </span>
+                                            <span *ngIf="!staff.status " class="label label-danger "> Desactivado </span>
+                                        </small>
+                                    </div>
+                                    
+                                </button>
+                        </ng-container>
+
+                    </div>
+
+                    <!-- CLIENT SELECT -->
+                    <div *ngIf="staffSelect" class="card card-outline-info mt-2 shadow">
+                        <div class="card-header">
+                            <h4 class="m-b-0 text-white">Seleccionado </h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title mb-0">
+                                <i class="mdi mdi-account-card-details"></i>
+                                <span class="font-weight-bold"> Nombre:</span> {{ staffSelect!.name }}
+                            </h3>
+                        </div>
+                    </div>
+                    <!-- CLIENT SELECT -->
+                </div>
+                <!-- SELECCIONAR CLIENTS -->
+
+            </div>
+            <div class="modal-footer">
+                <button *ngIf="selectStaff" (click)="createStep()" type="button " class="btn btn-info waves-effect " data-dismiss="modal ">Crear paso</button>
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===============================================================================
+    SUBIR IMAGENES ANTES DEL MANTENIMIENTO
+=============================================================================== -->
+<!-- <div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Subir imagenes antes del mantenimiento!</h4>
+        <label for="input-file-now">Formatos permitidos JPG - JPEG - PNG - WEBP</label>
+        <div class="dropify-wrapper">
+            <div class="dropify-message"><span class="file-icon"></span>
+                <p> Arrastre y suelte o de click aqui </p>
+                <p class="dropify-error">Ooops, something wrong appended.</p>
+            </div>
+            <div class="dropify-loader"></div>
+            <div class="dropify-errors-container">
+                <ul></ul>
+            </div>
+            <input #fileImgBef type="file" id="input-file-now" class="dropify" (change)="cambiarImage($event.target, 'before')">
+            <button type="button" class="dropify-clear">Remove</button>
+            <div class="dropify-preview" [ngClass]="{'d-block': imgTempBef}">
+
+                <span class="dropify-render">
+                    <img *ngIf="imgTempBef" [src]="imgTempBef" alt="">
+                </span>
+
+                <div class="dropify-infos">
+                    <div class="dropify-infos-inner">
+                        <p class="dropify-filename">
+                            <span class="file-icon"></span>
+                            <span class="dropify-filename-inner"></span></p>
+                        <p class="dropify-infos-message">Arrastre y suelte ó Seleccione una Imagen</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <button (click)="subirImg('imgBef')" [disabled]="imgTempBef === null" type="button" class="mt-3 btn waves-effect waves-light btn-rounded btn-info">Subir imagens</button>
+
+    </div>
+</div> -->
+<!-- SUBIR IMAGENES -->
+
+<!-- <div *ngIf="imgsbefore" class="card rojito">
+    <div class="card-body">
+        <h3 class="card-title"> Imagenes antes del mantenimiento </h3>
+
+        <swiper [config]="config">
+            <ng-template swiperSlide *ngFor="let item of corrective?.imgBef">
+                <div class="card">
+                    <img class="card-img img-fluid" [src]="item.img | imagen:'preventives' " alt="Card image">
+                </div>
+
+                <div class="card">
+                    <img class="card-img-top img-responsive" [src]="item.img | imagen:'correctives' " alt="Card image cap">
+                    <div class="card-body">
+                        <p class="mb-0">fecha: {{ item.date | date: 'MMMM d y hh:mm:ss a' }}</p>
+                        <ul class="list-inline font-14">
+
+                            <li>
+                                <a [href]="item.img | imagen:'correctives'" class="link" target="_blank">
+                                    <i class="mdi mdi-download"></i> Descargar
+                                </a>
+                            </li>
+                            <li class="p-l-0">
+                                <button (click)="deleteImg( item.img,'imgBef', 'correctives')" type="button" class="btn btn-sm btn-icon btn-pure btn-outline delete-row-btn" data-toggle="tooltip" data-original-title="Eliminar">
+                                    <i class="ti-close" aria-hidden="true"></i> Eliminar
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </ng-template>
+        </swiper>
+
+
+    </div>
+</div> -->
+<!-- ===============================================================================
+    SUBIR IMAGENES ANTES DEL MANTENIMIENTO
+=============================================================================== -->
+
+<!-- ===============================================================================
+    SUBIR IMAGENES DESPUES DEL MANTENIMIENTO
+=============================================================================== -->
+<!-- <div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Subir imagenes despues del mantenimiento</h4>
+        <label for="input-file-now">Formatos permitidos JPG - JPEG - PNG - WEBP</label>
+        <div class="dropify-wrapper">
+            <div class="dropify-message"><span class="file-icon"></span>
+                <p> Arrastre y suelte o de click aqui </p>
+                <p class="dropify-error">Ooops, something wrong appended.</p>
+            </div>
+            <div class="dropify-loader"></div>
+            <div class="dropify-errors-container">
+                <ul></ul>
+            </div>
+            <input #fileImgAft type="file" id="input-file-now" class="dropify" (change)="cambiarImage($event.target, 'after')">
+            <button type="button" class="dropify-clear">Remove</button>
+            <div class="dropify-preview" [ngClass]="{'d-block': imgTempAft}">
+
+                <span class="dropify-render">
+                    <img *ngIf="imgTempAft" [src]="imgTempAft" alt="">
+                </span>
+
+                <div class="dropify-infos">
+                    <div class="dropify-infos-inner">
+                        <p class="dropify-filename">
+                            <span class="file-icon"></span>
+                            <span class="dropify-filename-inner"></span></p>
+                        <p class="dropify-infos-message">Arrastre y suelte ó Seleccione una Imagen</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <button (click)="subirImg('imgAft')" [disabled]="imgTempAft === null" type="button" class="mt-3 btn waves-effect waves-light btn-rounded btn-info">Subir imagens</button>
+
+    </div>
+</div> -->
+<!-- SUBIR IMAGENES -->
+
+<!-- <div *ngIf="imgsafter" class="card rojito">
+    <div class="card-body">
+        <h3 class="card-title"> Imagenes antes del mantenimiento </h3>
+
+        <swiper [config]="config">
+            <ng-template swiperSlide *ngFor="let item of corrective?.imgAft">
+
+                <div class="card">
+                    <img class="card-img-top img-responsive" [src]="item.img | imagen:'correctives' " alt="Card image cap">
+                    <div class="card-body">
+                        <p class="mb-0">fecha: {{ item.date | date: 'MMMM d y hh:mm:ss a' }}</p>
+                        <ul class="list-inline font-14">
+
+                            <li>
+                                <a [href]="item.img | imagen:'correctives'" class="link" target="_blank">
+                                    <i class="mdi mdi-download"></i> Descargar
+                                </a>
+                            </li>
+                            <li class="p-l-0">
+                                <button (click)="deleteImg(  item.img,'imgAft', 'correctives')" type="button" class="btn btn-sm btn-icon btn-pure btn-outline delete-row-btn" data-toggle="tooltip" data-original-title="Eliminar">
+                                    <i class="ti-close" aria-hidden="true"></i> Eliminar
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </ng-template>
+        </swiper>
+
+
+    </div>
+</div> -->
+
+<!-- ===============================================================================
+    SUBIR IMAGENES DESPUES DEL MANTENIMIENTO
+=============================================================================== -->

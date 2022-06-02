@@ -11,6 +11,8 @@ import { SearchService } from 'src/app/services/search.service';
 import { TasksService } from '../../services/tasks.service';
 import { Client } from 'src/app/models/clients.model';
 
+
+
 @Component({
   selector: 'app-tareas',
   templateUrl: './tareas.component.html',

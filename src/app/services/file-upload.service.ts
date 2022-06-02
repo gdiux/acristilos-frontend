@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
 const base_url = environment.base_url;
 
 @Injectable({
@@ -35,17 +35,16 @@ export class FileUploadService {
   ==================================================================== */
   async updateImage(
     archivo: File,
-    type: 'products' | 'logo' | 'user' | 'preventives' | 'correctives',
+    type: 'products' | 'logo' | 'user' | 'archivos' ,
     id: string,
-    desc: 'imgBef' | 'imgAft' | 'video' | 'none' = 'none'
+    desc: 'archivo' | 'img' 
   ){
-
-    try {
       
       const url = `${base_url}/uploads/${type}/${id}?desc=${desc}`;
 
       const formData = new FormData();
       formData.append('image', archivo);
+
 
       const resp = await fetch(url, {
         method: 'PUT',
@@ -55,19 +54,7 @@ export class FileUploadService {
         body: formData
       });
 
-      const data = await resp.json();
-
-      if (data.ok) {
-        return data;
-      }else{
-        return false;
-
-      }      
-      
-    } catch (error) {
-      console.log(error);      
-      return false;
-    }
+      return await resp.json();
 
   }
 
